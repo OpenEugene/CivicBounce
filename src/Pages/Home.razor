@@ -355,6 +355,9 @@
     private string _name = "", _email = "", _radioStatus = "", _serverError = "";
     private bool _nameError, _emailError, _radioError, _submitting, _submitted;
 
+    private const string GhPat = "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";
+    private const string GhRepo = "OpenEugene/CivicBounce";
+
     private async Task HandleSubmit()
     {
         _nameError  = string.IsNullOrWhiteSpace(_name);
@@ -366,8 +369,25 @@
         _serverError = "";
         try
         {
-            var payload = new { name = _name.Trim(), email = _email.Trim(), interestLevel = _radioStatus };
-            var response = await Http.PostAsJsonAsync("api/signup", payload);
+            var interestLabel = _radioStatus switch
+            {
+                "community_leader" => "Community Leader",
+                "builder"         => "Builder",
+                "volunteer"       => "Volunteer",
+                _                 => _radioStatus
+            };
+            var title = $"[Signup] {_name.Trim()}";
+            var body  = $"## New CivicBounce Signup\n\n| Field | Value |\n|---|---|\n| **Handle** | {_name.Trim()} |\n| **Email** | {_email.Trim()} |\n| **Interest Level** | {interestLabel} |\n| **Submitted** | {DateTime.UtcNow:yyyy-MM-dd HH:mm} UTC |";
+            var payload = new { title, body, labels = new[] { "signup", _radioStatus } };
+
+            using var request = new HttpRequestMessage(HttpMethod.Post,
+                $"https://api.github.com/repos/{GhRepo}/issues");
+            request.Headers.Add("Authorization", $"Bearer {GhPat}");
+            request.Headers.Add("Accept", "application/vnd.github+json");
+            request.Headers.Add("User-Agent", "CivicBounce-Signup/1.0");
+            request.Content = JsonContent.Create(payload);
+
+            var response = await Http.SendAsync(request);
             if (response.IsSuccessStatusCode) { _submitted = true; }
             else { _serverError = $"Transmission failed (HTTP {(int)response.StatusCode}). Try again."; }
         }
