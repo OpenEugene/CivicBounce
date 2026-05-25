@@ -1,0 +1,385 @@
+@page "/"
+@using System.Timers
+@using System.Net.Http.Json
+@inject HttpClient Http
+@implements IDisposable
+
+<!-- BROADCAST BANNER -->
+<div class="broadcast-banner">
+    <span class="broadcast-dot"></span>
+    BROADCAST ACTIVE &nbsp;·&nbsp; MEMORIAL DAY 2026 REBUILD INITIATIVE &nbsp;·&nbsp; MAY 25, 2026
+</div>
+
+<!-- NAVBAR -->
+<nav class="cb-nav">
+    <div class="container d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center gap-2">
+            <div class="cb-logo-badge">CB</div>
+            <span class="cb-logo-text">Civic<span>Bounce</span></span>
+        </div>
+        <div class="d-flex align-items-center gap-3">
+            <span class="channel-badge d-none d-md-inline-flex">
+                <i class="fa-solid fa-signal me-1"></i> Channel 16 Monitoring
+            </span>
+            <a href="#join" class="btn btn-sm" style="background:rgba(255,255,255,.1);color:#fff;border:1px solid rgba(255,255,255,.1);border-radius:8px;">
+                Get On The Net
+            </a>
+        </div>
+    </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero-section">
+    <div class="container my-auto">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-7">
+                <div class="section-tag tag-orange mb-3">
+                    <i class="fa-solid fa-fire-extinguisher"></i> Out of the Dumpster Fire
+                </div>
+                <h1 class="display-4 fw-bold text-white mb-4" style="line-height:1.15;">
+                    Once you hit rock bottom,<br/>
+                    the only way is <span class="text-orange">UP!</span>
+                </h1>
+                <p class="fs-5 mb-4" style="color:#CBD5E1;max-width:600px;line-height:1.7;">
+                    The current political catastrophe is a dumpster fire — but we aren't sticking around to burn.
+                    <strong>CivicBounce</strong> launches <strong>Memorial Day 2026</strong> as an emergency response
+                    platform. No algorithms. No outrage farms. Just networks of real builders, digital and IRL.
+                </p>
+                <div class="signal-block mb-4" style="max-width:480px;">
+                    <div class="row g-0">
+                        <div class="col-4">
+                            <div class="signal-label text-green"><i class="fa-solid fa-tower-broadcast me-1"></i> Mode</div>
+                            <div class="signal-value">CB &amp; HAM Protocol</div>
+                        </div>
+                        <div class="col-4 signal-divider ps-3">
+                            <div class="signal-label text-orange"><i class="fa-solid fa-calendar me-1"></i> Launch</div>
+                            <div class="signal-value">Memorial Day 2026</div>
+                        </div>
+                        <div class="col-4 signal-divider ps-3">
+                            <div class="signal-label" style="color:var(--cb-blue);"><i class="fa-solid fa-circle-nodes me-1"></i> Grid Status</div>
+                            <div class="signal-value green">BOOTSTRAPPING</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a href="#join" class="cb-btn" style="width:auto;padding:.85rem 2rem;text-decoration:none;display:inline-flex;align-items:center;gap:.5rem;border-radius:12px;">
+                        Join the Rebuild Network <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <a href="#mission" class="btn" style="background:rgba(255,255,255,.06);color:#CBD5E1;border:1px solid rgba(255,255,255,.1);border-radius:12px;padding:.85rem 1.5rem;font-weight:600;">
+                        Read the Protocol
+                    </a>
+                </div>
+            </div>
+            <div class="col-lg-5 d-flex justify-content-center">
+                <div class="phoenix-card" style="max-width:340px;width:100%;">
+                    <div class="pulse-rings">
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring"></div>
+                        <div class="pulse-ring"></div>
+                    </div>
+                    <img src="phoenix_mascot.png" alt="CivicBounce Phoenix Mascot" class="phoenix-img" />
+                    <div class="mt-3">
+                        <span class="section-tag tag-orange" style="margin-bottom:.5rem;">Meet the Rebuild Phoenix</span>
+                        <p class="text-muted-cb" style="font-size:.85rem;font-style:italic;margin:0;">
+                            "He looked at the dumpster fire, put on his hard hat, and chose upward momentum."
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- COUNTDOWN -->
+<section class="countdown-section">
+    <div class="container text-center">
+        <p class="font-mono text-muted-cb mb-3" style="font-size:.75rem;text-transform:uppercase;letter-spacing:.15em;">
+            <i class="fa-solid fa-clock me-1 text-orange"></i> T-Minus to Launch
+        </p>
+        <div class="d-flex justify-content-center gap-3 flex-wrap">
+            <div class="countdown-unit">
+                <span class="countdown-number">@_days.ToString("D2")</span>
+                <span class="countdown-label">Days</span>
+            </div>
+            <div class="countdown-unit">
+                <span class="countdown-number">@_hours.ToString("D2")</span>
+                <span class="countdown-label">Hours</span>
+            </div>
+            <div class="countdown-unit">
+                <span class="countdown-number">@_minutes.ToString("D2")</span>
+                <span class="countdown-label">Minutes</span>
+            </div>
+            <div class="countdown-unit">
+                <span class="countdown-number">@_seconds.ToString("D2")</span>
+                <span class="countdown-label">Seconds</span>
+            </div>
+        </div>
+        @if (_launched)
+        {
+            <p class="text-green font-mono mt-3" style="font-size:.9rem;letter-spacing:.1em;">
+                🚀 WE HAVE LIFTOFF — THE REBUILD HAS BEGUN
+            </p>
+        }
+    </div>
+</section>
+
+<!-- MISSION PILLARS -->
+<section id="mission" class="section-pad bg-dark-cb">
+    <div class="container">
+        <div class="text-center mb-5" style="max-width:640px;margin-left:auto;margin-right:auto;">
+            <h2 class="text-white mb-3">The Emergency Response Protocol</h2>
+            <p class="text-muted-cb fs-5">
+                We aren't waiting for permission. We are treating this moment like a natural disaster response.
+                Here is how we bounce back.
+            </p>
+        </div>
+        <div class="row g-4">
+            <div class="col-md-4">
+                <div class="pillar-card orange h-100">
+                    <div class="pillar-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+                    <h4 class="text-white mb-3">Off-Platform Networks</h4>
+                    <p class="text-muted-cb" style="line-height:1.7;">
+                        Social media platforms profit from outrage and division. We build custom, dedicated
+                        forums and tools to bypass the algorithm entirely — keeping builders connected on
+                        infrastructure we control.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="pillar-card green h-100">
+                    <div class="pillar-icon"><i class="fa-solid fa-calendar-check"></i></div>
+                    <h4 class="text-white mb-3">Digital &amp; IRL Coordination</h4>
+                    <p class="text-muted-cb" style="line-height:1.7;">
+                        Code is great, but physical networks are unbreakable. Our tools focus on localized
+                        event scheduling, work parties, and real-world assembly of civic builders — because
+                        community is built in person.
+                    </p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="pillar-card blue h-100">
+                    <div class="pillar-icon"><i class="fa-solid fa-radio"></i></div>
+                    <h4 class="text-white mb-3">CB &amp; HAM Radio Ethos</h4>
+                    <p class="text-muted-cb" style="line-height:1.7;">
+                        Decentralized, redundant, and resilient. Operating adjacent to official emergency
+                        channels, we establish a comms-network mentality for civic action — because the
+                        best infrastructure survives any outage.
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- TERMINAL -->
+<section class="section-pad" style="background:var(--cb-slate);">
+    <div class="container">
+        <div class="row align-items-center gy-5">
+            <div class="col-lg-5">
+                <div class="section-tag tag-green mb-3">
+                    <i class="fa-solid fa-screwdriver-wrench"></i> What We Are Building
+                </div>
+                <h2 class="text-white mb-3">Tools to Organize, Coordinate, and Communicate</h2>
+                <p class="text-muted-cb mb-4" style="line-height:1.7;">
+                    A lightweight, robust stack built for real work. No bloat, no surveillance —
+                    just high-performance infrastructure for civic action.
+                </p>
+                <ul class="list-unstyled font-mono" style="font-size:.85rem;color:var(--cb-muted);">
+                    <li class="mb-2"><i class="fa-solid fa-check text-green me-2"></i>Secure, decentralized forums for regional planning</li>
+                    <li class="mb-2"><i class="fa-solid fa-check text-green me-2"></i>Zero-tracking, lightning-fast Event Scheduler</li>
+                    <li class="mb-2"><i class="fa-solid fa-check text-green me-2"></i>HAM/CB Radio registry and regional frequency maps</li>
+                    <li class="mb-2"><i class="fa-solid fa-check text-green me-2"></i>Offline-first resource catalogs and mutual aid guides</li>
+                </ul>
+            </div>
+            <div class="col-lg-7">
+                <div class="terminal-wrap">
+                    <div class="terminal-bar">
+                        <div>
+                            <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#ff5f57;margin-right:6px;"></span>
+                            <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#febc2e;margin-right:6px;"></span>
+                            <span style="display:inline-block;width:12px;height:12px;border-radius:50%;background:#28c840;"></span>
+                        </div>
+                        <span style="color:#4B5563;font-size:.75rem;">civicbounce-net-node-01.sh</span>
+                        <span style="color:#374151;font-size:.7rem;">9600 BAUD</span>
+                    </div>
+                    <div class="terminal-body">
+                        <div><span class="ts">[2026-05-25 12:00:00]</span> Initializing CivicBounce Node bootstrap...</div>
+                        <div><span class="ts">[2026-05-25 12:00:01]</span> <span class="warn">WARNING:</span> Heavy political catastrophe detected. Local infrastructure failing.</div>
+                        <div><span class="ts">[2026-05-25 12:00:02]</span> <span class="info">DECISION:</span> Initiating "Bounce Back" sequence.</div>
+                        <div style="border-top:1px solid #1f2937;margin:.5rem 0;padding-top:.5rem;">
+                            <span class="cmd">$</span> civicbounce --status<br/>
+                            <span class="out">● NET_STATUS: &nbsp;&nbsp;&nbsp;&nbsp;BOOTSTRAPPING</span><br/>
+                            <span class="out">● MASCOT_LOADED: &nbsp;FRIENDLY_PHOENIX (100%)</span><br/>
+                            <span class="out">● LAUNCH_DATE: &nbsp;&nbsp;&nbsp;May 25, 2026 (Memorial Day)</span>
+                        </div>
+                        <div>
+                            <span class="cmd">$</span> civicbounce --connect --channel=16<br/>
+                            <span class="warn" style="animation:blink 1.5s infinite;">>>> Establishing radio handshake... CONNECTED. Welcome to the Rebuild.</span>
+                            <span class="terminal-cursor"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- SIGNUP FORM -->
+<section id="join" class="signup-section">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-lg-7 col-xl-6 text-center mb-5">
+                <span class="section-tag tag-orange">Get On The Active List</span>
+                <h2 class="text-white mb-3">Standby for Signal Activation</h2>
+                <p class="text-muted-cb fs-5">
+                    We launch Memorial Day 2026. Sign up to receive the frequency map, bootstrap forum access,
+                    and localized event invites.
+                </p>
+            </div>
+        </div>
+        <div class="row justify-content-center">
+            <div class="col-lg-6 col-xl-5">
+                <div class="signup-card">
+                    @if (!_submitted)
+                    {
+                        <form @onsubmit="HandleSubmit" @onsubmit:preventDefault>
+                            <div class="mb-4">
+                                <label class="cb-label">Your Name / Handle</label>
+                                <input type="text"
+                                       class="form-control cb-input @(_nameError ? "is-invalid" : "")"
+                                       placeholder="e.g., Phoenix_Builder_9"
+                                       @bind="_name" @bind:event="oninput" />
+                                @if (_nameError) { <div class="field-error">Handle is required.</div> }
+                            </div>
+                            <div class="mb-4">
+                                <label class="cb-label">Email (Secure Transmission)</label>
+                                <input type="email"
+                                       class="form-control cb-input @(_emailError ? "is-invalid" : "")"
+                                       placeholder="e.g., builder@civicbounce.com"
+                                       @bind="_email" @bind:event="oninput" />
+                                @if (_emailError) { <div class="field-error">A valid email is required.</div> }
+                            </div>
+                            <div class="mb-4">
+                                <label class="cb-label">Radio Operator Status</label>
+                                <select class="form-select cb-input @(_radioError ? "is-invalid" : "")"
+                                        @bind="_radioStatus">
+                                    <option value="">— Select your status —</option>
+                                    <option value="licensed_ham">Licensed HAM Operator</option>
+                                    <option value="licensed_cb">Licensed CB Operator</option>
+                                    <option value="both">Licensed HAM &amp; CB</option>
+                                    <option value="learning">Currently Learning / Studying</option>
+                                    <option value="none">Not Yet — Just Joining the Network</option>
+                                </select>
+                                @if (_radioError) { <div class="field-error">Please select your radio operator status.</div> }
+                            </div>
+                            @if (!string.IsNullOrEmpty(_serverError))
+                            {
+                                <div class="alert mb-3" style="background:rgba(248,113,113,.1);border:1px solid rgba(248,113,113,.3);color:#f87171;border-radius:10px;font-family:var(--font-mono);font-size:.8rem;padding:.75rem 1rem;">
+                                    <i class="fa-solid fa-triangle-exclamation me-2"></i>@_serverError
+                                </div>
+                            }
+                            <button type="submit" class="cb-btn" disabled="@_submitting">
+                                @if (_submitting)
+                                {
+                                    <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                                    <span>Transmitting...</span>
+                                }
+                                else
+                                {
+                                    <i class="fa-solid fa-tower-broadcast me-2"></i>
+                                    <span>Transmit Registration</span>
+                                }
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="text-center py-4">
+                            <div class="success-icon mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                            <h4 class="text-white mb-2">Transmission Received!</h4>
+                            <p class="text-muted-cb mb-4" style="font-size:.9rem;">
+                                Your frequency handshake is complete. We've logged your handle.
+                                Standby for a bootstrap packet in your inbox.
+                            </p>
+                            <button class="btn font-mono" style="color:var(--cb-orange);font-size:.8rem;text-transform:uppercase;letter-spacing:.1em;background:none;border:none;" @onclick="ResetForm">
+                                Send another transmission
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- FOOTER -->
+<footer class="cb-footer">
+    <div class="container">
+        <div class="d-flex justify-content-center gap-4 mb-3">
+            <a href="https://github.com/OpenEugene/CivicBounce" target="_blank" rel="noopener">
+                <i class="fa-brands fa-github" style="font-size:1.3rem;"></i>
+            </a>
+            <a href="#join"><i class="fa-solid fa-radio" style="font-size:1.3rem;"></i></a>
+            <a href="mailto:hello@civicbounce.com"><i class="fa-solid fa-envelope" style="font-size:1.3rem;"></i></a>
+        </div>
+        <p class="mb-1">CivicBounce.com &copy; 2026</p>
+        <p class="mb-0" style="color:#475569;">
+            Built in response to the dumpster fire. We do not track you. We do not sell your data.
+        </p>
+    </div>
+</footer>
+
+@code {
+    // Countdown
+    private static readonly DateTime LaunchDate = new DateTime(2026, 5, 25, 12, 0, 0, DateTimeKind.Utc);
+    private Timer? _timer;
+    private int _days, _hours, _minutes, _seconds;
+    private bool _launched;
+
+    protected override void OnInitialized()
+    {
+        UpdateCountdown();
+        _timer = new Timer(1000);
+        _timer.Elapsed += async (_, _) => { UpdateCountdown(); await InvokeAsync(StateHasChanged); };
+        _timer.Start();
+    }
+
+    private void UpdateCountdown()
+    {
+        var remaining = LaunchDate - DateTime.UtcNow;
+        if (remaining <= TimeSpan.Zero) { _days = _hours = _minutes = _seconds = 0; _launched = true; }
+        else { _days = (int)remaining.TotalDays; _hours = remaining.Hours; _minutes = remaining.Minutes; _seconds = remaining.Seconds; _launched = false; }
+    }
+
+    public void Dispose() => _timer?.Dispose();
+
+    // Signup Form
+    private string _name = "", _email = "", _radioStatus = "", _serverError = "";
+    private bool _nameError, _emailError, _radioError, _submitting, _submitted;
+
+    private async Task HandleSubmit()
+    {
+        _nameError  = string.IsNullOrWhiteSpace(_name);
+        _emailError = string.IsNullOrWhiteSpace(_email) || !_email.Contains('@');
+        _radioError = string.IsNullOrWhiteSpace(_radioStatus);
+        if (_nameError || _emailError || _radioError) return;
+
+        _submitting = true;
+        _serverError = "";
+        try
+        {
+            var payload = new { name = _name.Trim(), email = _email.Trim(), radioStatus = _radioStatus };
+            var response = await Http.PostAsJsonAsync("api/signup", payload);
+            if (response.IsSuccessStatusCode) { _submitted = true; }
+            else { _serverError = $"Transmission failed (HTTP {(int)response.StatusCode}). Try again."; }
+        }
+        catch { _serverError = "Could not reach the relay station. Check your connection and try again."; }
+        finally { _submitting = false; }
+    }
+
+    private void ResetForm()
+    {
+        _name = _email = _radioStatus = _serverError = "";
+        _nameError = _emailError = _radioError = _submitted = _submitting = false;
+    }
+}
