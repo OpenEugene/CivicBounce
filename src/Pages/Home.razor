@@ -260,17 +260,15 @@
                                 @if (_emailError) { <div class="field-error">A valid email is required.</div> }
                             </div>
                             <div class="mb-4">
-                                <label class="cb-label">Radio Operator Status</label>
+                                <label class="cb-label">Interest Level</label>
                                 <select class="form-select cb-input @(_radioError ? "is-invalid" : "")"
                                         @bind="_radioStatus">
-                                    <option value="">— Select your status —</option>
-                                    <option value="licensed_ham">Licensed HAM Operator</option>
-                                    <option value="licensed_cb">Licensed CB Operator</option>
-                                    <option value="both">Licensed HAM &amp; CB</option>
-                                    <option value="learning">Currently Learning / Studying</option>
-                                    <option value="none">Not Yet — Just Joining the Network</option>
+                                    <option value="">— How will you contribute? —</option>
+                                    <option value="community_leader">Community Leader</option>
+                                    <option value="builder">Builder</option>
+                                    <option value="volunteer">Volunteer</option>
                                 </select>
-                                @if (_radioError) { <div class="field-error">Please select your radio operator status.</div> }
+                                @if (_radioError) { <div class="field-error">Please select your interest level.</div> }
                             </div>
                             @if (!string.IsNullOrEmpty(_serverError))
                             {
@@ -368,7 +366,7 @@
         _serverError = "";
         try
         {
-            var payload = new { name = _name.Trim(), email = _email.Trim(), radioStatus = _radioStatus };
+            var payload = new { name = _name.Trim(), email = _email.Trim(), interestLevel = _radioStatus };
             var response = await Http.PostAsJsonAsync("api/signup", payload);
             if (response.IsSuccessStatusCode) { _submitted = true; }
             else { _serverError = $"Transmission failed (HTTP {(int)response.StatusCode}). Try again."; }
