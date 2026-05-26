@@ -21,6 +21,12 @@
     <link rel="apple-touch-icon" href="icon-192.png" />
     <link href="src.styles.css" rel="stylesheet" />
     <script type="importmap"></script>
+    <style>
+        #app { opacity: 0; transition: opacity 0.3s ease; }
+        #app.ready { opacity: 1; }
+        /* suppress any default browser outline flash */
+        * { outline: none; }
+    </style>
 </head>
 
 <body>
@@ -37,6 +43,14 @@
     </div>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="_framework/blazor.webassembly#[.{fingerprint}].js"></script>
+    <script>
+        // Fade in the app once Blazor has rendered
+        Blazor.start().then(function() {
+            document.getElementById('app').classList.add('ready');
+        }).catch(function() {
+            document.getElementById('app').classList.add('ready');
+        });
+    </script>
 </body>
 
 </html>
